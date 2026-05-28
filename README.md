@@ -77,16 +77,21 @@ a longer, alternative private branch link that clears out the original transacti
 
 
 
+
+
+
+
+
   Day 2 ROLE ROTATION CONFIGURATION
 
 As mandated by the laboratory deployment rules, the group roles have been rotated clockwise for Day 2:
 
 | Day 1 Role | Day 2 Role | Assigned Team Member (GitHub Username / Name) |
 | :--- | :--- | :--- |
-| Security Analyst | ➡️ Scribe / Documenter | Nkembeni Dabrat |
-| Scribe / Documenter | ➡️ Lead Developer | Precious |
-| Lead Developer | ➡️ QA Tester | Preston |
-| QA Tester | ➡️ Network Engineer| Wells Durk |
-| Network Engineer | ➡️ Security Analyst| Loise|
+| Security Analyst |  Scribe / Documenter | Nkembeni Dabrat |
+| Scribe / Documenter |  Lead Developer | Precious |
+| Lead Developer |  QA Tester | Preston |
+| QA Tester |  Network Engineer| Wells Durk |
+| Network Engineer |  Security Analyst| Loise|
   
 
