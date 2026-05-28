@@ -82,7 +82,7 @@ a longer, alternative private branch link that clears out the original transacti
 
 
 
-  Day 2 ROLE ROTATION CONFIGURATION
+4.1  Day 2 ROLE ROTATION CONFIGURATION
 
 As mandated by the laboratory deployment rules, the group roles have been rotated clockwise for Day 2:
 
@@ -94,4 +94,50 @@ As mandated by the laboratory deployment rules, the group roles have been rotate
 | QA Tester |  Network Engineer| Wells Durk |
 | Network Engineer |  Security Analyst| Loise|
   
+
+
+
+Session 4.2 - Reentrancy Vulnerability Lab
+
+Exercise 4.2.1 – Vulnerability Identification (`VulnerableBank.sol`)
+Scribe Note: This section has been pre-staged by the Scribe to outline the security mechanics of the vulnerability. Real-time compilation and verification metrics will be appended once the Lead Developer deploys the environment.
+
+1. Identified Code Flaw
+In the provided `VulnerableBank.sol` contract, the vulnerability resides within the withdrawal tracking logic:
+```solidity
+// UNSAFE: The external contract call happens BEFORE the balance state is updated
+(bool success, ) = msg.sender.call{value: balances[msg.sender]}("");
+balances[msg.sender] = 0;
+
+2. Threat Vector Explanation
+
+The Exploit Mechanism: The contract uses msg.sender.call to send Ether back to the user before changing their tracking balance inside the database mapping to 0.
+
+The Attack Path: Because execution control shifts to the calling address before the contract updates its internal storage ledger, a malicious actor can deploy an attacking fallback contract. When the bank sends the funds, the attacker's fallback function intercepts the execution loop and immediately triggers another withdrawal request (withdraw()).
+
+The Result: The bank contract checks the balance again, sees it hasn't been zeroed out yet, and sends more Ether. This recursive reentrancy loop continues back and forth until the entire smart contract balance pool is completely drained.
+
+
+Exercise 4.2.2 – Security Pattern Implementation (SecureBank.sol)
+
+1. Remediation Strategy
+To fix this vulnerability, the team implements the Checks-Effects-Interactions architectural pattern. This pattern mandates that all internal blockchain state modifications must occur before interacting with external addresses.
+
+function withdraw() public {
+    // 1. CHECKS: Verify the user has enough collateral
+    uint256 amount = balances[msg.sender];
+    require(amount > 0, "Insufficient balance.");
+
+    // 2. EFFECTS: Update the state variable internal ledger FIRST
+    balances[msg.sender] = 0;
+
+    // 3. INTERACTIONS: Safely perform the external transfer
+    (bool success, ) = msg.sender.call{value: amount}("");
+    require(success, "Transfer failed.");
+}
+
+
+2. Architectural Value
+By switching the order of execution, if an attacker attempts to call withdraw() recursively during the interaction phase, the execution thread hits the Checks phase first. Because the state Effect already ran and set balances[msg.sender] = 0, the second execution thread immediately reverts, successfully defeating the reentrancy attack vector.
+
 
