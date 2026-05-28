@@ -70,3 +70,23 @@ cannot be canceled, unlinked, or dropped by future blockchain re-organizations.
 Without a firm finality boundary, malicious actors could perform double-spend vectors
 where they transfer currency to a merchant, wait to claim their items, and then mines 
 a longer, alternative private branch link that clears out the original transaction records.
+
+
+
+
+
+
+
+  Day 2 ROLE ROTATION CONFIGURATION
+
+As mandated by the laboratory deployment rules, the group roles have been rotated clockwise for Day 2:
+
+| Day 1 Role | Day 2 Role | Assigned Team Member (GitHub Username / Name) |
+| :--- | :--- | :--- |
+| Security Analyst | ➡️ Scribe / Documenter | Nkembeni Dabrat |
+| Scribe / Documenter | ➡️ Lead Developer | Precious |
+| Lead Developer | ➡️ QA Tester | Preston |
+| QA Tester | ➡️ Network Engineer| Wells Durk |
+| Network Engineer | ➡️ Security Analyst| Loise|
+  
+
