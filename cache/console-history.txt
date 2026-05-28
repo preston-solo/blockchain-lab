@@ -1,0 +1,6 @@
+.exit
+console.log(val.toString());   // Should print: 42
+const val = await contract.getValue();
+await contract.setValue(42);
+const contract = await Storage.attach("PASTE_YOUR_CONTRACT_ADDRESS_HERE");
+const Storage = await ethers.getContractFactory("SimpleStorage");
