@@ -421,6 +421,8 @@ Contract: SecureBank Unit Tests
 
 
 Session 7: Debrief & Submission
+
+
 Section 7.1: Final Report Requirements Registry
 The following matrix serves as our group's formal compliance index and submission registry. All mandatory deliverables specified in the laboratory guidelines have been compiled by the Scribe, verified against our workspace screenshots, and successfully pushed to our project repository:
 
@@ -437,8 +439,7 @@ The following matrix serves as our group's formal compliance index and submissio
 | Token & Event Tracking| Verified source code deployment for `LabToken.sol` along with transactional receipt logs tracking the emission of indexed `Transfer` events. | [√] Verified |
 | Peer Review Feedback| Documented code evaluation logs detailing exactly 2 structural strengths and 2 actionable security suggestions exchanged with our peer review group. | [√] Verified |
 | Test Results | Terminal summary proving 100% execution pass rates for `npx hardhat test`, including a detailed architecture brief of our custom 4th test case. | [√] [View Test Logs](./images/hardhat_test_results.png) |
-|Team Reflections| Comprehensive individual post-mortem paragraphs from all group members, breaking down personal key learning points and 
-unexpected findings. | [√] Verified |
+|Team Reflections| Comprehensive individual post-mortem paragraphs from all group members, breaking down personal key learning points and unexpected findings. | [√] Verified |
 
 
 Section 7.3: Final Submission Checklist
