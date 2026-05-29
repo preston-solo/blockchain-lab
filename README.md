@@ -463,3 +463,19 @@ Below are the individual professional post-mortem reflections compiled by each g
 
 Member 1: Nkembeni Dabrat. — Role: Scribe / Documenter
 Acting as the Scribe for Day 2 highlighted how critical clear technical communication is in software engineering. Managing the repository layout and tracking our versioning hurdles (like upgrading to Node v22.2.3 to fix compilation bugs) proved that environment stability is half the battle in blockchain development. Documenting the precise reentrancy execution flow solidified my understanding of how minor line-ordering flaws create catastrophic vulnerabilities in production.
+
+Member 2: Neba Precious. — Role: Lead Developer
+Writing the refactored code for SecureBank.sol gave me direct, hands-on experience with the Checks-Effects-Interactions defensive programming pattern. It's one thing to read about smart contract hacks, but actually restructuring the withdrawal control loop to update internal balances before touching an external contract showed me how elegant security solutions can be. Testing our code against an active malicious attacker contract was incredibly rewarding.
+
+Member 3: Lois Ann Mojoko. — Role: Security Analyst
+My main takeaway from this session was learning how easily decentralized applications can be broken if access controls are handled poorly. Stepping through the OpenZeppelin implementation to build an emergency circuit breaker showed me the value of relying on audited standard libraries instead of building custom permission loops. Testing the contract pause state in the console and watching the EVM actively throw an EnforcedPause() error proved our defenses worked.
+
+Member 4: Merdepet — Role: Network Engineer
+Setting up the local Ganache RPC node simulator on port 8545 and monitoring the incoming transaction receipts taught me a lot about how data is archived on-chain. Seeing the transaction logs emit the indexed data parameters from our LabToken.sol transfers made me realize why decentralized frontends depend so heavily on blockchain events rather than directly reading storage arrays to keep track of user states.
+
+Member 5: Preston Njakoy Shey  — Role: QA Tester
+Designing the custom 4th test block to assert reentrancy prevention forced me to think like an attacker. Writing a script that successfully captures a recursive call, handles the transaction revert parameters, and validates a clean exit criteria showed me how essential robust integration tests are before deploying code to any live network topology.
+
+
+
+
