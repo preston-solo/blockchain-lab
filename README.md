@@ -83,9 +83,9 @@ As mandated by the laboratory deployment rules, the group roles have been rotate
 | :--- | :--- | :--- |
 | Security Analyst |  Scribe / Documenter | Nkembeni Dabrat |
 | Scribe / Documenter |  Lead Developer |Neba Precious Sirri|
-| Lead Developer |  QA Tester | Preston |
+| Lead Developer |  QA Tester | Preston Njakoy Shey |
 | QA Tester |  Network Engineer| Mordepet |
-| Network Engineer |  Security Analyst| Loise|
+| Network Engineer |  Security Analyst| Lois Ann Mojoko|
 
 
 Operational Baseline & Environment Audit.
@@ -268,7 +268,7 @@ contract SecureStorage is Ownable, Pausable {
 }
 ...
 
- 3. Compilation, Deployment, and Hardhat Console Testing
+3. Compilation, Deployment, and Hardhat Console Testing
 Compilation Command:
 
 npx hardhat compile
@@ -294,3 +294,105 @@ await secureStorage.pause();
 await secureStorage.setValue(200); 
 // CRITICAL ERROR RESULT: Transaction reverted with OpenZeppelin error: "EnforcedPause()"
 ```
+
+
+Session 5: Token Contract and Event Verification
+1. Architecture Implementation (contracts/LabToken.sol)
+The team deployed a customized token contract to manage local asset distribution parameters and log real-time execution states via internal EVM events.
+
+...
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.19;
+
+contract LabToken {
+    string public name = "Lab Token";
+    string public symbol = "LTK";
+    uint256 public totalSupply;
+    
+    mapping(address => uint256) public balanceOf;
+
+    // MANDATORY LABORATORY EVENTS
+    event Transfer(address indexed from, address indexed to, uint256 value);
+    event Mint(address indexed to, uint256 value);
+
+    constructor(uint256 _initialSupply) {
+        mint(msg.sender, _initialSupply);
+    }
+
+    function mint(address _to, uint256 _amount) public {
+        totalSupply += _amount;
+        balanceOf[_to] += _amount;
+        emit Mint(_to, _amount);
+        emit Transfer(address(0), _to, _amount);
+    }
+
+    function transfer(address _to, uint256 _value) public returns (bool success) {
+        require(balanceOf[msg.sender] >= _value, "Insufficient balance");
+        
+        balanceOf[msg.sender] -= _value;
+        balanceOf[_to] += _value;
+        
+        // Emit event to log transaction data into the blockchain receipts trie
+        emit Transfer(msg.sender, _to, _value);
+        return true;
+    }
+}
+...
+
+
+2. Hardhat Console Event Logging and Verification
+To verify that events emit their indexed arguments correctly, the token contract was tested interactively via the local terminal interface.
+
+
+...
+// 1. Deploy LabToken with an initial supply of 1000 tokens
+const LabToken = await ethers.getContractFactory("LabToken");
+const token = await LabToken.deploy(1000);
+await token.waitForDeployment();
+
+// 2. Execute a state-mutating transfer to trigger an event emission
+const [owner, account1] = await ethers.getSigners();
+const tx = await token.transfer(account1.address, 250);
+const receipt = await tx.wait();
+
+// 3. Inspect Transaction Logs for Event Verification
+console.log(receipt.logs[0].fragment.name); 
+// Output Verification: "Transfer"
+
+console.log(receipt.logs[0].args);
+// Output Data Structure Captured:
+// from: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266 (Owner)
+// to: 0x70997970C51812dc3A010C7d01b50e0d17dc79C8 (Account 1)
+// value: 250n
+...
+
+
+3. Analytical Summary: The Purpose of Blockchain Events
+Solidity events serve as the crucial structural bridge between the Ethereum Virtual Machine (EVM) execution layer and external user interfaces (dApps). When an event like Transfer is emitted, the contract writes the arguments into the non-modifiable transaction receipt logs on the blockchain.
+
+Because frontend web applications and indexers (like The Graph or Etherscan) cannot easily read raw, internal smart contract state updates in real-time, they instead listen to these indexed event emissions. This allows user interfaces to instantly refresh token balances and display transaction histories without consuming excess computational gas or running constant, expensive read queries against the network state.
+
+
+Session 6: Security Audit and Peer Review
+1. Hardhat Unit Testing Suite & Execution
+To formally audit the behavioral security of our smart contracts, the team executed a comprehensive automated unit test suite locally via the Hardhat testing network framework.
+
+Execution Command:npx hardhat test
+
+Test Suite Architecture & Custom Test Case
+Our testing script handles 4 distinct functional verification blocks. Alongside standard verification tests for deployment states, asset deposit tracking, and standard authorized withdrawals, our team developed a Custom 4th Test Case specifically designed to simulate an adversarial attack vector:
+
+Custom Test Case Architecture (Reentrancy Prevention Check):
+This test handles the deployment of an explicit, malicious contract (Attacker.sol) that hooks into SecureBank's withdrawal entry point. The malicious contract tries to recursively re-enter the withdrawal process inside its low-level execution fallback loop. The test asserts that SecureBank successfully reverts the transaction path with "No balance" (or runs out of gas) on the very first recursive attempt, proving empirical mitigation of the reentrancy vulnerability via the Checks-Effects-Interactions pattern.
+
+Unit Test Console Terminal Output Summary:
+
+Contract: SecureBank Unit Tests
+    * Should accept deposits and correctly update user mapping balances
+    * Should execute standard, authorized withdrawals cleanly
+    * Should reject withdrawals that exceed a user's current ledger balance
+    * Custom Test Should successfully revert a recursive contract reentrancy attack loop
+      4 passing (840ms).
+
+2. Peer Review Evaluation Sheet
+   
