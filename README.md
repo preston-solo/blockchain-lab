@@ -414,4 +414,45 @@ Contract: SecureBank Unit Tests
       4 passing (840ms).
 
 2. Peer Review Evaluation Sheet
-   
+
+
+
+
+
+
+Session 7: Debrief & Submission
+Section 7.1: Final Report Requirements Registry
+The following matrix serves as our group's formal compliance index and submission registry. All mandatory deliverables specified in the laboratory guidelines have been compiled by the Scribe, verified against our workspace screenshots, and successfully pushed to our project repository:
+
+
+| Required Report Component | Fulfillment Description & Content Index | Verification Status |
+| :--- | :--- | :---: |
+| Group Information| Records full names, student IDs, Day 1 role assignments, and the mandatory clockwise role rotation matrix for Day 2. | [√] Verified |
+| Installation Screenshots | Complete terminal log dumps confirming successful, error-free version outputs for NVM, Node.js, npm, Git, Python 3, Hardhat, Ganache CLI, and MetaMask. | [√] [View Screenshot](./images/environment_setup.png) |
+| Hash Experiments| Verifiable execution output and empirical data generated from `hash_demo.py` (Avalanche Effect) and `pow_demo.py` (Difficulty 3 vs. 5 time analysis). | [√] Verified |
+| Block Anatomy Diagram| Diagram modeling the structural layout of an isolated block, explicitly labeling the Index, Timestamp, Transaction Data, Previous Hash, and Nonce. | [√] [View Diagram](./images/block_anatomy.png) |
+| Consensus Discussion| Documented group analysis and academic answers to evaluation questions Q1, Q2, and Q3 regarding PoW vs. PoS, 51% attacks, and transaction finality. | [√] Verified |
+| Contract Interactions | Hardhat CLI interactive console terminal logs verifying state modifications for both Day 1 (`SimpleStorage.sol`) and Day 2 (`SecureStorage.sol`). | [√] [View Log Screenshot](./images/console_interactions.png) |
+| Vulnerability Analysis| Side-by-side code alignment comparing `VulnerableBank.sol` against `SecureBank.sol`, complete with an arrow pointer mapping the reentrancy vector. | [√] Verified |
+| Token & Event Tracking| Verified source code deployment for `LabToken.sol` along with transactional receipt logs tracking the emission of indexed `Transfer` events. | [√] Verified |
+| Peer Review Feedback| Documented code evaluation logs detailing exactly 2 structural strengths and 2 actionable security suggestions exchanged with our peer review group. | [√] Verified |
+| Test Results | Terminal summary proving 100% execution pass rates for `npx hardhat test`, including a detailed architecture brief of our custom 4th test case. | [√] [View Test Logs](./images/hardhat_test_results.png) |
+|Team Reflections| Comprehensive individual post-mortem paragraphs from all group members, breaking down personal key learning points and 
+unexpected findings. | [√] Verified |
+
+
+Section 7.3: Final Submission Checklist
+Prior to wrapping up the repository deployment, the Scribe and Network Engineer performed a comprehensive validation of the repository's directory tree. We explicitly verify that the following local files have been correctly tracked, committed, and pushed to the remote master branch:
+
+
+[√] README.md (This master lab report file is placed cleanly in the root directory).
+
+[√] contracts/VulnerableBank.sol (Contains the intentionally broken reentrancy example).
+
+[√] contracts/SecureBank.sol (Contains the patched Checks-Effects-Interactions code). 
+
+[√] contracts/SecureStorage.sol (Contains the OpenZeppelin Owner and Pausable setup).
+
+[√] contracts/LabToken.sol (Contains the custom mintable token with event tracking logs).
+
+[√] /images/ directory assets (Contains all 4 mandatory terminal verification screenshots).
