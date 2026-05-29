@@ -456,3 +456,10 @@ Prior to wrapping up the repository deployment, the Scribe and Network Engineer 
 [√] contracts/LabToken.sol (Contains the custom mintable token with event tracking logs).
 
 [√] /images/ directory assets (Contains all 4 mandatory terminal verification screenshots).
+
+
+Section 7.4: Team Individual Reflections
+Below are the individual professional post-mortem reflections compiled by each group member regarding the technical challenges, security paradigms, and operational insights uncovered during the Day 2 labs:
+
+Member 1: Nkembeni Dabrat. — Role: Scribe / Documenter
+Acting as the Scribe for Day 2 highlighted how critical clear technical communication is in software engineering. Managing the repository layout and tracking our versioning hurdles (like upgrading to Node v22.2.3 to fix compilation bugs) proved that environment stability is half the battle in blockchain development. Documenting the precise reentrancy execution flow solidified my understanding of how minor line-ordering flaws create catastrophic vulnerabilities in production.
