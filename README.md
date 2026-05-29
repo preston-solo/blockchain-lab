@@ -79,7 +79,7 @@ Day 2 ROLE ROTATION CONFIGURATION
 
 As mandated by the laboratory deployment rules, the group roles have been rotated clockwise for Day 2:
 
-| Day 1 Role | Day 2 Role | Assigned Team Member (GitHub Username / Name) |
+| Day 1 Role | Day 2 Role | Assigned Team Member (Name) |
 | :--- | :--- | :--- |
 | Security Analyst |  Scribe / Documenter | Nkembeni Dabrat |
 | Scribe / Documenter |  Lead Developer |Neba Precious Sirri|
@@ -123,6 +123,7 @@ A deliberately insecure banking contract was created in the local directory at c
 
 
 ...
+
 contract VulnerableBank {
     mapping(address => uint256) public balances;
 
@@ -143,6 +144,7 @@ contract VulnerableBank {
         balances[msg.sender] = 0; 
     }
 }
+
 ...
 
 
@@ -179,6 +181,7 @@ The state-draining security vulnerability inside VulnerableBank.sol resides enti
 
 
 ```
+
 function withdraw() public {
         uint256 bal = balances[msg.sender];
         rrequirebal > 0, "Insufficient balance");
@@ -188,6 +191,7 @@ function withdraw() public {
 
         balances[msg.sender] = 0; 
     }
+
 ```
 
 The vulnerability is exploitable because VulnerableBank transfers funds to an external contract BEFORE updating its balance record. This allows a malicious contract to trigger its fallback function and recursively call withdraw() again. Because the line that zeroes out the balance has not been reached, the bank reads the attacker's balance as fully intact and sends funds repeatedly, spinning in a loop until the contract is completely drained.
@@ -196,6 +200,7 @@ The vulnerability is exploitable because VulnerableBank transfers funds to an ex
 To securely resolve this reentrancy vulnerability, the code was refactored to prioritize state effect adjustments before executing external transfers.
 
 ```
+
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
@@ -219,6 +224,7 @@ contract SecureBank {
         require(success, "Transfer failed");
     }
 }
+
  ```
 
 4. Comparative Analysis
@@ -237,6 +243,7 @@ The baseline storage contract was refactored to inherit standardized access rest
 
 
 ...
+
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
@@ -266,6 +273,7 @@ contract SecureStorage is Ownable, Pausable {
         _unpause();
     }
 }
+
 ...
 
 3. Compilation, Deployment, and Hardhat Console Testing
@@ -279,6 +287,7 @@ Hardhat Console Interaction & Pause Functionality Validation:
 To verify the circuit-breaker runtime constraints, the following execution sequence was performed inside the interactive environment:
 
 ```
+
 // 1. Get contract instance and deploy
 const SecureStorage = await ethers.getContractFactory("SecureStorage");
 const secureStorage = await SecureStorage.deploy();
@@ -293,6 +302,8 @@ await secureStorage.pause();
 // 4. Attempt state modification while contract is paused
 await secureStorage.setValue(200); 
 // CRITICAL ERROR RESULT: Transaction reverted with OpenZeppelin error: "EnforcedPause()"
+
+
 ```
 
 
@@ -301,6 +312,8 @@ Session 5: Token Contract and Event Verification
 The team deployed a customized token contract to manage local asset distribution parameters and log real-time execution states via internal EVM events.
 
 ...
+
+
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
@@ -337,6 +350,8 @@ contract LabToken {
         return true;
     }
 }
+
+
 ...
 
 
@@ -345,6 +360,8 @@ To verify that events emit their indexed arguments correctly, the token contract
 
 
 ...
+
+
 // 1. Deploy LabToken with an initial supply of 1000 tokens
 const LabToken = await ethers.getContractFactory("LabToken");
 const token = await LabToken.deploy(1000);
@@ -364,6 +381,8 @@ console.log(receipt.logs[0].args);
 // from: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266 (Owner)
 // to: 0x70997970C51812dc3A010C7d01b50e0d17dc79C8 (Account 1)
 // value: 250n
+
+
 ...
 
 
