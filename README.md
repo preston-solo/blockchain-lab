@@ -75,69 +75,213 @@ a longer, alternative private branch link that clears out the original transacti
 
 
 
-
-
-
-
-
-
-
-4.1  Day 2 ROLE ROTATION CONFIGURATION
+Day 2 ROLE ROTATION CONFIGURATION
 
 As mandated by the laboratory deployment rules, the group roles have been rotated clockwise for Day 2:
 
 | Day 1 Role | Day 2 Role | Assigned Team Member (GitHub Username / Name) |
 | :--- | :--- | :--- |
 | Security Analyst |  Scribe / Documenter | Nkembeni Dabrat |
-| Scribe / Documenter |  Lead Developer | Precious |
+| Scribe / Documenter |  Lead Developer |Neba Precious Sirri|
 | Lead Developer |  QA Tester | Preston |
-| QA Tester |  Network Engineer| Wells Durk |
+| QA Tester |  Network Engineer| Mordepet |
 | Network Engineer |  Security Analyst| Loise|
   
 
 
 
-Session 4.2 - Reentrancy Vulnerability Lab
 
-Exercise 4.2.1 – Vulnerability Identification (`VulnerableBank.sol`)
-Scribe Note: This section has been pre-staged by the Scribe to outline the security mechanics of the vulnerability. Real-time compilation and verification metrics will be appended once the Lead Developer deploys the environment.
+Session 4: Reentrancy Vulnerability Lab
 
-1. Identified Code Flaw
-In the provided `VulnerableBank.sol` contract, the vulnerability resides within the withdrawal tracking logic:
-```solidity
-// UNSAFE: The external contract call happens BEFORE the balance state is updated
-(bool success, ) = msg.sender.call{value: balances[msg.sender]}("");
-balances[msg.sender] = 0;
+Section 4.1: Vulnerability Overview & Environment Setup
 
-2. Threat Vector Explanation
+1. Objective
+The objective of this session is to analyze, exploit, and subsequently mitigate a critical Reentrancy Vulnerability within a decentralized banking context. Reentrancy represents one of the most destructive smart contract flaws, famously responsible for the historic DAO hack.
 
-The Exploit Mechanism: The contract uses msg.sender.call to send Ether back to the user before changing their tracking balance inside the database mapping to 0.
-
-The Attack Path: Because execution control shifts to the calling address before the contract updates its internal storage ledger, a malicious actor can deploy an attacking fallback contract. When the bank sends the funds, the attacker's fallback function intercepts the execution loop and immediately triggers another withdrawal request (withdraw()).
-
-The Result: The bank contract checks the balance again, sees it hasn't been zeroed out yet, and sends more Ether. This recursive reentrancy loop continues back and forth until the entire smart contract balance pool is completely drained.
+2. The Mechanics of Reentrancy
+The flaw occurs when a smart contract transfers ether to an untrusted external address before updating its internal state balance ledger. In Ethereum, sending ether transfers transaction control to the receiving contract's fallback or receive() function. If that receiving contract is malicious, it can recursively call the withdrawal function again before the first invocation completes, draining the contract's entire liquidity pool.
 
 
-Exercise 4.2.2 – Security Pattern Implementation (SecureBank.sol)
+3. Environment Initialization
+To set up the lab environment, the project workspace was verified to ensure the Hardhat network suite was ready to deploy and test local contracts using Solidity compiler version ^0.8.19.
 
-1. Remediation Strategy
-To fix this vulnerability, the team implements the Checks-Effects-Interactions architectural pattern. This pattern mandates that all internal blockchain state modifications must occur before interacting with external addresses.
 
-function withdraw() public {
-    // 1. CHECKS: Verify the user has enough collateral
-    uint256 amount = balances[msg.sender];
-    require(amount > 0, "Insufficient balance.");
+Section 4.2: Creating the Insecure Contract (VulnerableBank.sol)
 
-    // 2. EFFECTS: Update the state variable internal ledger FIRST
-    balances[msg.sender] = 0;
+1. Source Code Implementation
+A deliberately insecure banking contract was created in the local directory at contracts/VulnerableBank.sol. The implementation utilizes a state mapping to track user deposits and exposes a flawed withdrawal mechanism.
 
-    // 3. INTERACTIONS: Safely perform the external transfer
-    (bool success, ) = msg.sender.call{value: amount}("");
-    require(success, "Transfer failed.");
+
+
+...
+contract VulnerableBank {
+    mapping(address => uint256) public balances;
+
+    function deposit() public payable {
+        balances[msg.sender] += msg.value;
+    }
+
+    // THE VULNERABLE FUNCTION (Prone to Reentrancy)
+    function withdraw() public {
+        uint256 bal = balances[msg.sender];
+        require(bal > 0, "Insufficient balance");
+
+        // Vulnerable external call made BEFORE updating the state balance
+        (bool success, ) = msg.sender.call{value: bal}("");
+        require(success, "Transfer failed");
+
+        // CRITICAL FLAW: This state update is never reached during an attack
+        balances[msg.sender] = 0; 
+    }
 }
+...
 
 
-2. Architectural Value
-By switching the order of execution, if an attacker attempts to call withdraw() recursively during the interaction phase, the execution thread hits the Checks phase first. Because the state Effect already ran and set balances[msg.sender] = 0, the second execution thread immediately reverts, successfully defeating the reentrancy attack vector.
+1. Technical Flaw Analysis (Why it is Vulnerable)
+The code violates the foundational Checks-Effects-Interactions security pattern:
+
+Checks: The contract correctly checks the balance condition (require(bal > 0)).
+
+Interactions: The contract interacts with the external world by sending ether (msg.sender.call).
+
+Effects: The contract attempts to apply its state effect (balances[msg.sender] = 0) after the interaction. Because control is handed over to an external attacker during the interaction step, the state effect is suspended in mid-execution, leaving the attacker's balance fully intact for recursive draining.
+
+3. Compilation Verification
+The workspace environment successfully compiled the insecure contract using the Hardhat framework:
+
+Command: npx hardhat compile
+
+Output: Compilation successful. Artifacts and ABI binaries safely generated inside the artifacts/contracts/VulnerableBank.sol/ directory.
 
 
+
+
+Section: 4.2.1 – Identify & Fix (VulnerableBank.sol vs SecureBank.sol)
+
+1. Compilation Confirmation
+The deliberately insecure contract VulnerableBank.sol was verified using the Hardhat compilation framework.
+
+Execution Command: npx hardhat compile
+
+Output Status: Successful compilation. Artifact binaries and contract ABIs were safely generated in the workspace build folder.
+
+2. Vulnerable Line Identification and Exploitation Analysis
+The state-draining security vulnerability inside VulnerableBank.sol resides entirely within the following implementation block:
+
+
+```
+function withdraw() public {
+        uint256 bal = balances[msg.sender];
+        rrequirebal > 0, "Insufficient balance");
+
+        (bool success, ) = msg.sender.call{value: bal}("");  // <--- CRITICAL VULNERABILITY LINK
+        require(success, "Transfer failed");
+
+        balances[msg.sender] = 0; 
+    }
+```
+
+The vulnerability is exploitable because VulnerableBank transfers funds to an external contract BEFORE updating its balance record. This allows a malicious contract to trigger its fallback function and recursively call withdraw() again. Because the line that zeroes out the balance has not been reached, the bank reads the attacker's balance as fully intact and sends funds repeatedly, spinning in a loop until the contract is completely drained.
+
+3. Patched Source Code (contracts/SecureBank.sol)
+To securely resolve this reentrancy vulnerability, the code was refactored to prioritize state effect adjustments before executing external transfers.
+
+```
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.19;
+
+contract SecureBank {
+    mapping(address => uint256) public balances;
+
+    function deposit() public payable {
+        balances[msg.sender] += msg.value;
+    }
+
+    function withdraw() public {
+        // 1. CHECK
+        uint256 bal = balances[msg.sender];
+        require(bal > 0, "Insufficient balance");
+
+        // 2. EFFECT (State balance is zeroed out BEFORE external interaction)
+        balances[msg.sender] = 0;
+
+        // 3. INTERACTION
+        (bool success, ) = msg.sender.call{value: bal}("");
+        require(success, "Transfer failed");
+    }
+}
+ ```
+
+4. Comparative Analysis
+The difference is the execution order of state updates and external transfers. VulnerableBank risks asset theft because it initiates an external ether transfer before zeroing out the sender's balance mapping. Conversely, SecureBank strictly follows the Checks-Effects-Interactions pattern by modifying the internal ledger balance to zero before sending any funds. This structure stops reentrancy because any recursive attack loop will instantly fail at the initial balance check.
+
+Section 4.3: Access Control Hardening (SecureStorage.sol
+
+1. Dependency Installation
+To integrate industry-standard, audited security modules, the OpenZeppelin Contracts package was added to the project local workspace directory.
+
+Execution Command:
+npm install @openzeppelin/contracts
+
+2. Hardened Source Code (contracts/SecureStorage.sol)
+The baseline storage contract was refactored to inherit standardized access restrictions and emergency circuit-breaker protocols.
+
+
+...
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.19;
+
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/Pausable.sol";
+
+contract SecureStorage is Ownable, Pausable {
+    uint256 private storedValue;
+    event ValueUpdated(address indexed updater, uint256 newValue);
+
+    constructor() Ownable(msg.sender) {}
+
+    function setValue(uint256 _val) public onlyOwner whenNotPaused {
+        storedValue = _val;
+        emit ValueUpdated(msg.sender, _val);
+    }
+
+    function getValue() public view returns (uint256) {
+        return storedValue;
+    }
+
+    function pause() public onlyOwner {
+        _pause();
+    }
+
+    function unpause() public onlyOwner {
+        _unpause();
+    }
+}
+...
+
+ 3. Compilation, Deployment, and Hardhat Console Testing
+Compilation Command:
+
+npx hardhat compile
+
+Status: Successful. OpenZeppelin dependencies resolved and artifact files generated.
+
+Hardhat Console Interaction & Pause Functionality Validation:
+To verify the circuit-breaker runtime constraints, the following execution sequence was performed inside the interactive environment:
+
+```
+// 1. Get contract instance and deploy
+const SecureStorage = await ethers.getContractFactory("SecureStorage");
+const secureStorage = await SecureStorage.deploy();
+
+// 2. Test standard functionality while active
+await secureStorage.setValue(100); 
+console.log(await secureStorage.getValue()); // Output: 100
+
+// 3. Trigger Emergency Circuit-Breaker (Pause)
+await secureStorage.pause();
+
+// 4. Attempt state modification while contract is paused
+await secureStorage.setValue(200); 
+// CRITICAL ERROR RESULT: Transaction reverted with OpenZeppelin error: "EnforcedPause()"
+```
