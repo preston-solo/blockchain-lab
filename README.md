@@ -86,10 +86,19 @@ As mandated by the laboratory deployment rules, the group roles have been rotate
 | Lead Developer |  QA Tester | Preston |
 | QA Tester |  Network Engineer| Mordepet |
 | Network Engineer |  Security Analyst| Loise|
-  
 
 
+Operational Baseline & Environment Audit.
 
+Prior to initializing Day 2 smart contract execution sequences, the team conducted a full administrative environment configuration audit to stabilize our development workstation, yielding the following validated operational profile:
+
+Operating System Node: Ubuntu 20.04+ running inside a Windows Subsystem for Linux (WSL2) container environment.
+
+Node.js Environment Run-layer: Upgraded to v22.2.3 (Note: Upgraded from the baseline Day 1 manual recommendation of v20 to resolve active runtime module execution exceptions and library orchestration conflicts).  
+
+Local Blockchain Node Simulator: Ganache CLI actively serving as the target network execution pipeline on local host RPC Port 8545. 
+
+Compiler Setup Verification: Hardhat framework successfully configured to parse, execute, and pass complete npx hardhat compile actions cleanly without structural warnings.  
 
 Session 4: Reentrancy Vulnerability Lab
 
