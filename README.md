@@ -418,7 +418,9 @@ Contract: SecureBank Unit Tests
 
   
 
-2. Peer Review Evaluation Sheet
+2. Peer Review Evaluation Sheet.
+
+Per the laboratory turnover guidelines, our group executed a formal repository code exchange with Group 4 to conduct an external peer-audit cycle. Below is the structured log documenting the feedback matrix exchanged between our teams:
 
 
 
