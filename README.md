@@ -439,12 +439,14 @@ The following matrix serves as our group's formal compliance index and submissio
 | Hash Experiments| Verifiable execution output and empirical data generated from `hash_demo.py` (Avalanche Effect) and `pow_demo.py` (Difficulty 3 vs. 5 time analysis). | [√] Verified |
 | Block Anatomy Diagram| Diagram modeling the structural layout of an isolated block, explicitly labeling the Index, Timestamp, Transaction Data, Previous Hash, and Nonce. | [×] [View Diagram](./images/block_anatomy.png) |
 | Consensus Discussion| Documented group analysis and academic answers to evaluation questions Q1, Q2, and Q3 regarding PoW vs. PoS, 51% attacks, and transaction finality. | [√] Verified |
-| Contract Interactions | Hardhat CLI interactive console terminal logs verifying state modifications for both Day 1 (`SimpleStorage.sol`) and Day 2 (`SecureStorage.sol`). | [×] [View Log Screenshot](./images/console_interactions.png) |
+| Contract Interactions | Hardhat CLI interactive console terminal logs verifying state modifications for both Day 1 (`SimpleStorage.sol`) and Day 2 (`SecureStorage.sol`). | [√] [View Log Screenshot](./images/console_interactions.png) |
 | Vulnerability Analysis| Side-by-side code alignment comparing `VulnerableBank.sol` against `SecureBank.sol`, complete with an arrow pointer mapping the reentrancy vector. | [√] Verified |
 | Token & Event Tracking| Verified source code deployment for `LabToken.sol` along with transactional receipt logs tracking the emission of indexed `Transfer` events. | [√] Verified |
 | Peer Review Feedback| Documented code evaluation logs detailing exactly 2 structural strengths and 2 actionable security suggestions exchanged with our peer review group. | [×] Verified |
-| Test Results | Terminal summary proving 100% execution pass rates for `npx hardhat test`, including a detailed architecture brief of our custom 4th test case. | [×] [View Test Logs](./images/hardhat_test_results.png) |
+| Test Results | Terminal summary proving 100% execution pass rates for `npx hardhat test`, including a detailed architecture brief of our custom 4th test case. | [√] [View Test Logs](./images/hardhat_test_results.png) |
 |Team Reflections| Comprehensive individual post-mortem paragraphs from all group members, breaking down personal key learning points and unexpected findings. | [√] Verified |
+| Token & Event Tracking | Verified source code deployment for LabToken.sol along with transactional receipt logs tracking the emission of indexed Transfer events. | [√] [View Log Screenshot](./images/token_events.png) |
+| Test Results | Terminal summary proving 100% execution pass rates for npx hardhat test, including a detailed architecture brief of our custom 4th test case. | [√] [View Test Logs](./images/hardhat_test_results.png) |
 
 
 Section 7.3: Final Submission Checklist
@@ -461,7 +463,7 @@ Prior to wrapping up the repository deployment, the Scribe and Network Engineer 
 
 [√] contracts/LabToken.sol (Contains the custom mintable token with event tracking logs).
 
-[×] /images/ directory assets (Contains all 4 mandatory terminal verification screenshots).
+[√] /images/ directory assets (Contains all 4 mandatory terminal verification screenshots).
 
 
 Section 7.4: Team Individual Reflections
