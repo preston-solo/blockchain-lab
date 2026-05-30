@@ -407,11 +407,16 @@ This test handles the deployment of an explicit, malicious contract (Attacker.so
 Unit Test Console Terminal Output Summary:
 
 Contract: SecureBank Unit Tests
-    * Should accept deposits and correctly update user mapping balances
-    * Should execute standard, authorized withdrawals cleanly
-    * Should reject withdrawals that exceed a user's current ledger balance
-    * Custom Test Should successfully revert a recursive contract reentrancy attack loop
-      4 passing (840ms).
+
+* Should accept deposits and correctly update user mapping balances
+   
+* Should execute standard, authorized withdrawals cleanly
+    
+* Should reject withdrawals that exceed a user's current ledger balance
+    
+* Custom Test Should successfully revert a recursive contract reentrancy attack loop 4 passing (840ms).
+
+  
 
 2. Peer Review Evaluation Sheet
 
@@ -430,15 +435,15 @@ The following matrix serves as our group's formal compliance index and submissio
 | Required Report Component | Fulfillment Description & Content Index | Verification Status |
 | :--- | :--- | :---: |
 | Group Information| Records full names, student IDs, Day 1 role assignments, and the mandatory clockwise role rotation matrix for Day 2. | [√] Verified |
-| Installation Screenshots | Complete terminal log dumps confirming successful, error-free version outputs for NVM, Node.js, npm, Git, Python 3, Hardhat, Ganache CLI, and MetaMask. | [√] [View Screenshot](./images/environment_setup.png) |
+| Installation Screenshots | Complete terminal log dumps confirming successful, error-free version outputs for NVM, Node.js, npm, Git, Python 3, Hardhat, Ganache CLI, and MetaMask. | [×] [View Screenshot](./images/environment_setup.png) |
 | Hash Experiments| Verifiable execution output and empirical data generated from `hash_demo.py` (Avalanche Effect) and `pow_demo.py` (Difficulty 3 vs. 5 time analysis). | [√] Verified |
-| Block Anatomy Diagram| Diagram modeling the structural layout of an isolated block, explicitly labeling the Index, Timestamp, Transaction Data, Previous Hash, and Nonce. | [√] [View Diagram](./images/block_anatomy.png) |
+| Block Anatomy Diagram| Diagram modeling the structural layout of an isolated block, explicitly labeling the Index, Timestamp, Transaction Data, Previous Hash, and Nonce. | [×] [View Diagram](./images/block_anatomy.png) |
 | Consensus Discussion| Documented group analysis and academic answers to evaluation questions Q1, Q2, and Q3 regarding PoW vs. PoS, 51% attacks, and transaction finality. | [√] Verified |
-| Contract Interactions | Hardhat CLI interactive console terminal logs verifying state modifications for both Day 1 (`SimpleStorage.sol`) and Day 2 (`SecureStorage.sol`). | [√] [View Log Screenshot](./images/console_interactions.png) |
+| Contract Interactions | Hardhat CLI interactive console terminal logs verifying state modifications for both Day 1 (`SimpleStorage.sol`) and Day 2 (`SecureStorage.sol`). | [×] [View Log Screenshot](./images/console_interactions.png) |
 | Vulnerability Analysis| Side-by-side code alignment comparing `VulnerableBank.sol` against `SecureBank.sol`, complete with an arrow pointer mapping the reentrancy vector. | [√] Verified |
 | Token & Event Tracking| Verified source code deployment for `LabToken.sol` along with transactional receipt logs tracking the emission of indexed `Transfer` events. | [√] Verified |
-| Peer Review Feedback| Documented code evaluation logs detailing exactly 2 structural strengths and 2 actionable security suggestions exchanged with our peer review group. | [√] Verified |
-| Test Results | Terminal summary proving 100% execution pass rates for `npx hardhat test`, including a detailed architecture brief of our custom 4th test case. | [√] [View Test Logs](./images/hardhat_test_results.png) |
+| Peer Review Feedback| Documented code evaluation logs detailing exactly 2 structural strengths and 2 actionable security suggestions exchanged with our peer review group. | [×] Verified |
+| Test Results | Terminal summary proving 100% execution pass rates for `npx hardhat test`, including a detailed architecture brief of our custom 4th test case. | [×] [View Test Logs](./images/hardhat_test_results.png) |
 |Team Reflections| Comprehensive individual post-mortem paragraphs from all group members, breaking down personal key learning points and unexpected findings. | [√] Verified |
 
 
@@ -456,7 +461,7 @@ Prior to wrapping up the repository deployment, the Scribe and Network Engineer 
 
 [√] contracts/LabToken.sol (Contains the custom mintable token with event tracking logs).
 
-[√] /images/ directory assets (Contains all 4 mandatory terminal verification screenshots).
+[×] /images/ directory assets (Contains all 4 mandatory terminal verification screenshots).
 
 
 Section 7.4: Team Individual Reflections
