@@ -435,7 +435,7 @@ The following matrix serves as our group's formal compliance index and submissio
 | Required Report Component | Fulfillment Description & Content Index | Verification Status |
 | :--- | :--- | :---: |
 | Group Information| Records full names, student IDs, Day 1 role assignments, and the mandatory clockwise role rotation matrix for Day 2. | [√] Verified |
-| Installation Screenshots | Complete terminal log dumps confirming successful, error-free version outputs for NVM, Node.js, npm, Git, Python 3, Hardhat, Ganache CLI, and MetaMask. | [×] [View Screenshot](./images/environment_setup.png) |
+| Installation Screenshots | Complete terminal log dumps confirming successful, error-free version outputs for NVM, Node.js, npm, Git, Python 3, Hardhat, Ganache CLI, and MetaMask. | [√] [View Screenshot](./images/environment_setup.png) |
 | Hash Experiments| Verifiable execution output and empirical data generated from `hash_demo.py` (Avalanche Effect) and `pow_demo.py` (Difficulty 3 vs. 5 time analysis). | [√] Verified |
 | Block Anatomy Diagram| Diagram modeling the structural layout of an isolated block, explicitly labeling the Index, Timestamp, Transaction Data, Previous Hash, and Nonce. | [×] [View Diagram](./images/block_anatomy.png) |
 | Consensus Discussion| Documented group analysis and academic answers to evaluation questions Q1, Q2, and Q3 regarding PoW vs. PoS, 51% attacks, and transaction finality. | [√] Verified |
