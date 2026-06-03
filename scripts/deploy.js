@@ -1,11 +1,11 @@
-import { network } from "hardhat";
+import hre from "hardhat";
 
 async function main() {
-    const { ethers } = await network.create();
-    const Storage = await ethers.getContractFactory("SimpleStorage");
-    const contract = await Storage.deploy();
-    await contract.waitForDeployment();
-    console.log("Contract deployed to:", await contract.getAddress());
+  const connection = await hre.network.connect();
+  const SecureStorage = await connection.ethers.getContractFactory("contracts/SecureStorage.sol:SecureStorage");
+  const contract = await SecureStorage.deploy();
+  await contract.waitForDeployment();
+  console.log("SecureStorage deployed to:", await contract.getAddress());
 }
 
 main().catch((err) => { console.error(err); process.exit(1); });
